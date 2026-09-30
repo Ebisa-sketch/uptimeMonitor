@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: uptime_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: uptime_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: uptime_backend
+    restart: always
+    ports:
+      - '5000:5000'
+    environment:
+      DATABASE_URL: postgresql://postgres:postgrespassword@postgres:5432/uptime_db?schema=public
+      PORT: 5000
+      JWT_SECRET: super_secret_jwt_key_uptime_2026
+      NODE_ENV: development
+    depends_on:
+      - postgres
+
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    container_name: uptime_worker
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://postgres:postgrespassword@postgres:5432/uptime_db?schema=public
+      NODE_ENV: development
+    depends_on:
+      - postgres
+      - backend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: uptime_frontend
+    restart: always
+    ports:
+      - '3000:80'
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
