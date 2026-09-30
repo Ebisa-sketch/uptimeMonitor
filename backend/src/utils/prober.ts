@@ -74,7 +74,7 @@ export async function probeMonitor(monitorId: string): Promise<ProbeResult> {
         res.on('end', () => {
           const rawHeaders: Record<string, string> = {};
           for (const [k, v] of Object.entries(res.headers)) {
-            if (v) rawHeaders[k] = Array.isArray(v) ? v.join(', ') : v;
+            if (v !== undefined) rawHeaders[k] = Array.isArray(v) ? v.join(', ') : String(v);
           }
           resolve({
             status: res.statusCode || 0,
