@@ -478,8 +478,15 @@ tbody tr:hover {
   }
 }
 
+@media (max-width: 960px) {
+  .login-showcase-panel {
+    display: none !important;
+  }
+}
+
 @media (max-width: 480px) {
   h1 { font-size: 1.5rem !important; }
   .btn { padding: 0.5rem 0.85rem; font-size: 0.875rem; }
 }
+
 

@@ -74,11 +74,11 @@ export const MonitorDetail: React.FC = () => {
 
   const handleExport = async (formatType: 'csv' | 'json') => {
     try {
-      const token = localStorage.getItem('uptime_token');
-      const response = await fetch(`http://localhost:5000/api/monitors/${id}/export?format=${formatType}`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const res = await api.get(`/monitors/${id}/export`, {
+        params: { format: formatType },
+        responseType: 'blob',
       });
-      const blob = await response.blob();
+      const blob = new Blob([res.data]);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;

@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Activity, Mail, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { Activity, Mail, ArrowLeft, CheckCircle2, Sun, Moon } from 'lucide-react';
 import { api } from '../api/client';
+import { useTheme } from '../context/ThemeContext';
 
 const forgotPasswordSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -13,6 +14,7 @@ const forgotPasswordSchema = z.object({
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 
 export const ForgotPassword: React.FC = () => {
+  const { theme, toggleTheme } = useTheme();
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -42,8 +44,31 @@ export const ForgotPassword: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '1.5rem',
+        background: 'var(--bg-primary)',
+        color: 'var(--text-primary)',
+        position: 'relative',
       }}
     >
+      <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem' }}>
+        <button
+          onClick={toggleTheme}
+          style={{
+            padding: '0.45rem',
+            borderRadius: '8px',
+            background: 'var(--card-bg)',
+            border: '1px solid var(--border-color)',
+            color: 'var(--text-secondary)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+        >
+          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+        </button>
+      </div>
+
       <div
         className="glass-panel"
         style={{
@@ -59,7 +84,7 @@ export const ForgotPassword: React.FC = () => {
               width: '48px',
               height: '48px',
               borderRadius: '12px',
-              background: 'linear-gradient(135deg, var(--brand-primary), #8b5cf6)',
+              background: 'linear-gradient(135deg, #6366f1, #3b82f6)',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
